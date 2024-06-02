@@ -1,0 +1,41 @@
+/* components/Card.module.css */
+.card {
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .icon {
+    margin-right: 8px;
+  }
+  
+  .content {
+    font-size: 14px;
+    color: #555;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .leftCard {
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+  }
+  
+  .rightCard {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+  }
+  
+  .contentContainer {
+    flex: 1;
+  }

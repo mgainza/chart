@@ -1,0 +1,129 @@
+.radialWrapper {
+    display: flex;
+    /* justify-content: center; */
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    min-width: 830px;
+    min-height: 500px;
+    border: 1px solid black;
+  }
+  .center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    height: 340px;
+    background-color: #4f46e5;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  .label {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #4f46e5;
+  }
+  .child {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 0; /* Distancia desde la parte superior */
+    left: 0;
+    border: 1px solid #4f46e5;
+
+  }
+  .label:nth-child(2) {
+    top: 20px;
+    left: 0;
+    width: 377px;
+  }
+  .label:nth-child(3) {
+    top: 20px;
+    left: calc(100% - 377px);
+    width: 377px;
+  }
+  .label:nth-child(4) {
+    top: 40%;
+    left: calc(100% - 300px);
+    width: 300px;
+  }
+  .label:nth-child(5) {
+    top: 184px;
+    left: 0%;
+    width: 302px;
+  }
+  .label:nth-child(6) {
+    top: 348px;
+    left: 0%;
+    width: 377px;
+  }
+  .label:nth-child(7) {
+    top: 348px;
+    left: calc(100% - 377px);
+    width: 377px;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between; /* Distribuye los elementos a los extremos */
+    align-items: center; /* Centra verticalmente los elementos */
+    position: relative;
+    gap: 20px;
+  }
+  
+  .left, .right {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en columna */
+  }
+
+  .chart {
+    width: 200px; /* Espacio entre las dos columnas */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .rectangle {
+    width: 375px;
+  }
+
+  .rectangle2 {
+    width: 300px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .row {
+    display: flex;
+    gap: 100px;
+  }
+
+  .row2 {
+    display: flex;
+    gap: 250px;
+  }
+  
+  .column {
+    flex: 1;
+  }
+  
+  /* .rectangle {
+    width: 50px;
+    height: 100px;
+    background-color: blue;
+    margin: 5px;
+  } */

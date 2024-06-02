@@ -1,112 +1,172 @@
-import Image from "next/image";
+import Chart from "./ui/components/donut-chart/chart";
+import styles from "./page.module.css";
+import Card from "./ui/components/Card/Card";
 
-export default function Home() {
+async function getData() {
+  const res = await fetch("http://localhost:8080/results");
+  // The return value is *not* serialized
+  // You can return Date, Map, Set, etc.
+
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error("Failed to fetch data");
+  }
+
+  const COLORS = [
+    "#9F9FFF",
+    "#BBA9FF",
+    "#D4B6FE",
+    "#E9C1FF",
+    "#FECEFE",
+    "#FFE4F7",
+  ];
+
+  const dataServer = await res.json();
+
+  // get Data for chart
+  const enumKeys = [
+    "rtbPercentage",
+    "amaPercentage",
+    "stsPercentage",
+    "gfiPercentage",
+    "tobPercentage",
+    "wttPercentage",
+  ];
+
+  console.log(dataServer);
+
+  const chartValues = enumKeys.map((key) => ({
+    title: key,
+    // @ts-ignore
+    value: dataServer.results[key] as number,
+  }));
+  // order DESC
+  const chartValuesSortedByValue = chartValues.sort(
+    (a, b) => b.value - a.value
+  );
+
+  console.log(chartValuesSortedByValue)
+
+  // add color for Chart
+
+  const coloredData = chartValuesSortedByValue.map((entry, index) => ({
+    ...entry,
+    color: COLORS[index],
+    order: index
+  }));
+
+  const row1 = coloredData.filter(e => [0, 1].includes(e.order));
+  const row2 = coloredData.filter(e => [2, 5].includes(e.order));
+  const row3 = coloredData.filter(e => [3, 4].includes(e.order));
+
+
+  return [row1, row2, row3];
+}
+
+export default async function Home() {
+
+  const dataServer = await getData();
+
+  console.log(dataServer);
+
+  const data1 = dataServer[0]
+  
+  const data2 = dataServer[1].reverse();
+  
+  const data3 = dataServer[2].reverse()
+
+  const data = [...data1, ...data2, ...data3].sort(
+    (a, b) => b.value - a.value
+  );
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+      <div className={`${styles.container}`}>
+        <div className={`${styles.chart}`}>
+          <Chart
+            size={200}
+            data={data}
+            paddingAngle={0}
+            lineWidth={30}
+            label={`${data[0].value}%`}
+            labelPosition={0}
+            radius={50}
+            startAngle={180}
+          />
         </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+        <div className={`${styles.row}`}>
+          {data1.map((x, index) => (
+            <div className={`${styles.column}`}>
+              <div className={`${styles.rectangle}`} key={index}>
+                <Card
+                  title={`Sales Data ${index}`}
+                  content="Here is some sales data for the last quarter."
+                  renderLeft={index === 0}
+                  key={index}
+                >
+                  <Chart
+                    data={[{ ...x }]}
+                    paddingAngle={0}
+                    lineWidth={25}
+                    startAngle={180}
+                    radius={50}
+                    size={100}
+                    labelPosition={0}
+                    label={`${data1[index].value}%`}
+                  />
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className={`${styles.row2}`}>
+          {data2.map((x, index) => (
+            <div className={`${styles.column}`}>
+              <div className={`${styles.rectangle2}`} key={index}>
+                <Card
+                  title={`Sales Data ${index}`}
+                  content="Here is some sales data for the last quarter."
+                  renderLeft={index === 0}
+                >
+                  <Chart
+                    data={[{ ...x }]}
+                    paddingAngle={0}
+                    lineWidth={25}
+                    startAngle={180}
+                    radius={50}
+                    size={100}
+                    labelPosition={0}
+                    label={`${data2[index].value}%`}
+                  />
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className={`${styles.row}`}>
+          {data3.map((x, index) => (
+            <div className={`${styles.column}`}>
+              <div className={`${styles.rectangle}`} key={index}>
+                <Card
+                  title={`Sales Data ${index}`}
+                  content="Here is some sales data for the last quarter."
+                  renderLeft={index === 0}
+                >
+                  <Chart
+                    data={[{ ...x }]}
+                    paddingAngle={0}
+                    lineWidth={25}
+                    startAngle={180}
+                    radius={50}
+                    size={100}
+                    labelPosition={0}
+                    label={`${data3[index].value}%`}
+                  />
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
